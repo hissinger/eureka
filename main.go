@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"eureka/fargoclient"
 	"eureka/interfaces"
-	"eureka/restclient"
 	"eureka/vars"
 	"log"
 	"net/http"
@@ -36,13 +36,13 @@ func main() {
 	}()
 
 	var ec interfaces.EurekaClient
-	// ec := fargoclient.NewClient()
-	ec = restclient.NewClient()
-	// ec := xuanboclient.NewClient()
-	// ec := fairwayclient.NewClient()
-	// ec := springbootclient.NewClient()
-	// ec := hikoqiuclient.NewClient()
-	// ec := arthurhltclient.NewClient()
+	ec = fargoclient.NewClient()
+	// ec = restclient.NewClient()
+	// ec = xuanboclient.NewClient()
+	// ec = fairwayclient.NewClient()
+	// ec = springbootclient.NewClient()
+	// ec = hikoqiuclient.NewClient()
+	// ec = arthurhltclient.NewClient()
 	ec.Register()
 
 	quit := make(chan os.Signal)

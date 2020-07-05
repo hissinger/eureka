@@ -31,31 +31,27 @@ docker run -it --rm eureka-client
 ```
 
 
-
-## 테스트 결과
-
-golang의 eureka client 구현 라이브러리를 정리한 사이트: https://libs.garden/go/search?q=eureka&page=1
-
-
-
-### 이슈
-
-- DeRegister시에 status를 `DOWN`으로 변경하고 DeRegister(DELETE Method)를 수행해야 한다. (spring cloud client의 REST 패킷 분석 결과)
-- instance id 필드를 사용하면 hearbeat시에 404에러 발생. spring cloud client도 동일 현상 발생됨.
-
-
-
-### 기능 동작 확인
+## 테스트 라이브러리
 - github.com/hudl/fargo
 - github.com/xuanbo/eureka-client
-- github.com/pineda89/golang-springboot/eureka : 내부적으로 fargo 사용
+- github.com/pineda89/golang-springboot/eureka
+- github.com/ArthurHlt/go-eureka-client
+- github.com/spectre013/fairway
+- github.com/HikoQiu/go-eureka-client/eureka (instance 정보에 meta 필드가 없음)
 - 직접 REST로 구현
 
 
+## 결과
+- https://github.com/phantasmicmeans/spring-cloud-netflix-eureka-tutorial 를 참고해서 직접 eureka 서버를 실행하면 모든 라이브러리가 정상 작동하는 것을 확인함.
+- 처음에는 docekr(https://hub.docker.com/r/springcloud/eureka)로 eureka 서버를 실행했는데 아래와 같은 이슈가 있었음.(삽질)
+- docker(https://hub.docker.com/r/springcloud/eureka)로 eureka 서버를 실행했을 때 이슈
+  - degegister시에도 eureka 서버에서 삭제되지 않음.
+  - instance id 필드를 사용하면 hearbeat시에 404에러 발생
+  - github.com/ArthurHlt/go-eureka-client : port enable 필드가 bool로 정의 되어 있어서 에러 발생
+  - github.com/spectre013/fairway : port enable 필드가 bool로 정의 되어 있어서 에러 발생
+  - github.com/HikoQiu/go-eureka-client/eureka : instance 정보에 meta 필드가 없음.
 
-### 문제 있음
 
-- github.com/ArthurHlt/go-eureka-client : port enable 필드가 bool로 정의 되어 있어서 eureka 서버에서 에러 발생
-
-- github.com/spectre013/fairway : port enable 필드가 bool로 정의 되어 있어서 eureka 서버에서 에러 발생
-- github.com/HikoQiu/go-eureka-client/eureka : instance 정보에 meta 필드가 없음.
+## References
+ - https://github.com/phantasmicmeans/spring-cloud-netflix-eureka-tutorial
+ - https://libs.garden/go/search?q=eureka&page=1 golang의 eureka client 구현 라이브러리를 정리한 사이트

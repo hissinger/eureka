@@ -2,6 +2,7 @@ package arthurhltclient
 
 import (
 	"eureka/vars"
+	"strconv"
 	"time"
 
 	"github.com/ArthurHlt/go-eureka-client/eureka"
@@ -22,6 +23,7 @@ func NewClient() *ArthurHltClient {
 func (c *ArthurHltClient) Register() {
 	c.client = eureka.NewClient([]string{vars.EurekaServerURL})
 	c.instance = eureka.NewInstanceInfo(vars.LocalIP, vars.AppName, vars.LocalIP, vars.LocalPort, uint(vars.HeartBeatInterval), false) //Create a new instance to register
+	c.instance.InstanceID = vars.LocalIP + ":" + vars.AppName + ":" + strconv.Itoa(vars.LocalPort)
 	c.instance.Metadata = &eureka.MetaData{
 		Map: make(map[string]string),
 	}
@@ -36,11 +38,12 @@ func (c *ArthurHltClient) sendHeartbeat() {
 	for {
 		select {
 		case <-c.ticker.C:
-			c.client.SendHeartbeat(c.instance.App, c.instance.HostName) // say to eureka that your app is alive (here you must send heartbeat before 30 sec)
+			c.client.SendHeartbeat(c.instance.App, c.instance.InstanceID) // say to eureka that your app is alive (here you must send heartbeat before 30 sec)
 		}
 	}
 }
 
 func (c *ArthurHltClient) DeRegister() {
 	c.ticker.Stop()
+	c.client.UnregisterInstance(vars.AppName, c.instance.InstanceID)
 }
